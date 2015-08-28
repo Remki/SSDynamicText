@@ -7,17 +7,35 @@
 //
 
 #import "SSDynamicText.h"
+#import "NSAttributedString+SSTextSize.h"
 
 @interface SSDynamicLabel ()
 
 @property (nonatomic, copy) NSString *fontName;
 @property (nonatomic, assign) CGFloat baseSize;
+@property (nonatomic, copy) NSAttributedString *baseAttributedText;
 
 - (void) setup;
 
 @end
 
 @implementation SSDynamicLabel
+
+- (void)setFont:(UIFont *)font {
+    [super setFont:font];
+
+    self.fontName = self.font.fontName;
+    self.baseSize = self.font.pointSize;
+    self.defaultFontDescriptor = (self.font.fontDescriptor ?:
+                                  [UIFontDescriptor fontDescriptorWithName:self.fontName
+                                                                      size:self.baseSize]);
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+    self.baseAttributedText = attributedText;
+
+    [self changeAttributedStringFontWithDelta:[UIApplication sharedApplication].preferredFontSizeDelta];
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
@@ -29,18 +47,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-    if (self.font) {
-        self.fontName = self.font.fontName;
-        self.baseSize = self.font.pointSize;
-    }
-
-    self.fontName = (self.fontName ?: [self ss_defaultFontName]);
-    self.baseSize = (self.baseSize ?: [self ss_defaultBaseSize]);
-    
-    self.defaultFontDescriptor = (self.font.fontDescriptor ?:
-                                  [UIFontDescriptor fontDescriptorWithName:self.fontName
-                                                                      size:self.baseSize]);
 
     [self setup];
 }
@@ -62,15 +68,27 @@
     [self ss_stopObservingTextSizeChanges];
 }
 
+- (void)changeFontWithDelta:(NSInteger)newDelta {
+    CGFloat preferredSize = [self.defaultFontDescriptor.fontAttributes[UIFontDescriptorSizeAttribute] floatValue];
+    preferredSize += newDelta;
+
+    [super setFont:[UIFont fontWithDescriptor:self.defaultFontDescriptor
+                                         size:preferredSize]];
+}
+
+- (void)changeAttributedStringFontWithDelta:(NSInteger)newDelta {
+    [super setAttributedText:[self.baseAttributedText ss_attributedStringWithAdjustedFontSizeWithDelta:newDelta]];
+}
+
 - (void)setup {
     __weak typeof (self) weakSelf = self;
     
     SSTextSizeChangedBlock changeHandler = ^(NSInteger newDelta) {
-        CGFloat preferredSize = [weakSelf.defaultFontDescriptor.fontAttributes[UIFontDescriptorSizeAttribute] floatValue];
-        preferredSize += newDelta;
-        
-        weakSelf.font = [UIFont fontWithDescriptor:weakSelf.defaultFontDescriptor
-                                              size:preferredSize];
+
+        [weakSelf changeFontWithDelta:newDelta];
+        if (weakSelf.baseAttributedText.length > 0) {
+            [weakSelf changeAttributedStringFontWithDelta:newDelta];
+        }
     };
     
     [self ss_startObservingTextSizeChangesWithBlock:changeHandler];
