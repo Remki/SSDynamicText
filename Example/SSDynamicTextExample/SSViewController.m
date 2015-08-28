@@ -33,14 +33,14 @@ static NSString * const kLabelText = @"This label, text field, and text view all
 }
 
 - (void)setUpNormalTexts {
-    _label.attributedText = nil;
-    _textField.attributedText = nil;
-    _textView.attributedText = nil;
-    [_button setAttributedTitle:nil forState:UIControlStateNormal];
+    self.label.attributedText = nil;
+    self.textField.attributedText = nil;
+    self.textView.attributedText = nil;
+    [self.button setAttributedTitle:nil forState:UIControlStateNormal];
 
-    _label.text = kLabelText;
-    _textView.text = @"Text View";
-    [_button setTitle:@"Change to attributed" forState:UIControlStateNormal];
+    self.label.text = kLabelText;
+    self.textView.text = @"Text View";
+    [self.button setTitle:@"Change to attributed" forState:UIControlStateNormal];
 }
 
 - (void)setLabelAttributedTextWithFirstAttributes:(NSDictionary *)attributes secondAttributes:(NSDictionary *)secondAttributes {
@@ -48,7 +48,7 @@ static NSString * const kLabelText = @"This label, text field, and text view all
                                                                                   attributes:attributes];
     [labelText addAttributes:secondAttributes range:[kLabelText rangeOfString:@"change your preferred text size"]];
 
-    _label.attributedText = labelText;
+    self.label.attributedText = labelText;
 }
 
 - (void)setTextFieldAttributedTextWithFirstAttributes:(NSDictionary *)attributes secondAttributes:(NSDictionary *)secondAttributes {
@@ -56,7 +56,7 @@ static NSString * const kLabelText = @"This label, text field, and text view all
     NSMutableAttributedString *textFieldText = [[NSMutableAttributedString alloc] initWithString:textFieldString
                                                                                       attributes:attributes];
     [textFieldText addAttributes:secondAttributes range:[textFieldString rangeOfString:@"TextField"]];
-    _textField.attributedText = textFieldText;
+    self.textField.attributedText = textFieldText;
 }
 
 - (void)setTextViewAttributedTextWithFirstAttributes:(NSDictionary *)attributes secondAttributes:(NSDictionary *)secondAttributes {
@@ -64,7 +64,7 @@ static NSString * const kLabelText = @"This label, text field, and text view all
     NSMutableAttributedString *textViewText = [[NSMutableAttributedString alloc] initWithString:textViewString
                                                                                      attributes:attributes];
     [textViewText addAttributes:secondAttributes range:[textViewString rangeOfString:@"works for TextView"]];
-    _textView.attributedText = textViewText;
+    self.textView.attributedText = textViewText;
 }
 
 - (void)setButtonAttributedTextWithFirstAttributes:(NSDictionary *)attributes secondAttributes:(NSDictionary *)secondAttributes {
@@ -72,13 +72,13 @@ static NSString * const kLabelText = @"This label, text field, and text view all
     NSMutableAttributedString *buttonText = [[NSMutableAttributedString alloc] initWithString:buttonString
                                                                                    attributes:attributes];
     [buttonText addAttributes:secondAttributes range:[buttonString rangeOfString:@"normal"]];
-    [_button setAttributedTitle:buttonText forState:UIControlStateNormal];
+    [self.button setAttributedTitle:buttonText forState:UIControlStateNormal];
 }
 
 - (void)setUpAttributedTexts {
-    _label.text = nil;
-    _textField.text = nil;
-    _textView.text = nil;
+    self.label.text = nil;
+    self.textField.text = nil;
+    self.textView.text = nil;
 
     NSDictionary *attributes =
     @{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont systemFontOfSize:16.0f]};
@@ -97,50 +97,50 @@ static NSString * const kLabelText = @"This label, text field, and text view all
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    _label = [SSDynamicLabel labelWithFont:@"Courier" baseSize:16.0f];
-    _label.textColor = [UIColor darkGrayColor];
-    _label.numberOfLines = 0;
-    _label.textAlignment = NSTextAlignmentCenter;
-    [_label setFrame:(CGRect){
+    self.label = [SSDynamicLabel labelWithFont:@"Courier" baseSize:16.0f];
+    self.label.textColor = [UIColor darkGrayColor];
+    self.label.numberOfLines = 0;
+    self.label.textAlignment = NSTextAlignmentCenter;
+    [self.label setFrame:(CGRect){
         {10, 25},
         {CGRectGetWidth(self.view.frame) - 20, 220}
     }];
     
-    [self.view addSubview:_label];
+    [self.view addSubview:self.label];
 
-    _button = [SSDynamicButton buttonWithFont:@"Courier" baseSize:16.0f];
-    [_button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    _button.backgroundColor = [UIColor lightGrayColor];
-    [_button setFrame:(CGRect){
-        {10, CGRectGetMaxY(_label.frame) + 10},
+    self.button = [SSDynamicButton buttonWithFont:@"Courier" baseSize:16.0f];
+    [self.button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    self.button.backgroundColor = [UIColor lightGrayColor];
+    [self.button setFrame:(CGRect){
+        {10, CGRectGetMaxY(self.label.frame) + 10},
         {CGRectGetWidth(self.view.frame) - 20, 44}
     }];
-    [_button addTarget:self action:@selector(changeTexts:) forControlEvents:UIControlEventTouchUpInside];
+    [self.button addTarget:self action:@selector(changeTexts:) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.view addSubview:_button];
+    [self.view addSubview:self.button];
 
-    _textField = [SSDynamicTextField textFieldWithFont:@"Courier"
+    self.textField = [SSDynamicTextField textFieldWithFont:@"Courier"
                                               baseSize:15.0f];
-    _textField.textColor = [UIColor darkGrayColor];
-    _textField.backgroundColor = [UIColor lightGrayColor];
-    _textField.placeholder = @"Text Field";
-    [_textField setFrame:(CGRect){
-        {10, CGRectGetMaxY(_button.frame) + 10},
+    self.textField.textColor = [UIColor darkGrayColor];
+    self.textField.backgroundColor = [UIColor lightGrayColor];
+    self.textField.placeholder = @"Text Field";
+    [self.textField setFrame:(CGRect){
+        {10, CGRectGetMaxY(self.button.frame) + 10},
         {CGRectGetWidth(self.view.frame) - 20, 32}
     }];
     
-    [self.view addSubview:_textField];
+    [self.view addSubview:self.textField];
     
-    _textView = [SSDynamicTextView textViewWithFont:@"Courier"
+    self.textView = [SSDynamicTextView textViewWithFont:@"Courier"
                                            baseSize:15.0f];
-    _textView.textColor = [UIColor redColor];
-    _textView.backgroundColor = [UIColor lightGrayColor];
-    [_textView setFrame:(CGRect){
-        {10, CGRectGetMaxY(_textField.frame) + 10},
+    self.textView.textColor = [UIColor redColor];
+    self.textView.backgroundColor = [UIColor lightGrayColor];
+    [self.textView setFrame:(CGRect){
+        {10, CGRectGetMaxY(self.textField.frame) + 10},
         {CGRectGetWidth(self.view.frame) - 20, 100}
     }];
     
-    [self.view addSubview:_textView];
+    [self.view addSubview:self.textView];
 
     [self setUpNormalTexts];
 }

@@ -107,9 +107,7 @@
     SSTextSizeChangedBlock changeHandler = ^(NSInteger newDelta) {
 
         [weakSelf changeFontWithDelta:newDelta];
-        if (self.baseAttributedTitlesDictionary.allKeys > 0) {
-            [weakSelf changeAttributedStringWithDelta:newDelta];
-        }
+        [weakSelf changeAttributedStringWithDelta:newDelta];
     };
 
     [self ss_startObservingTextSizeChangesWithBlock:changeHandler];

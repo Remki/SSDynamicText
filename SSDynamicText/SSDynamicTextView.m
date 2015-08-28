@@ -32,6 +32,10 @@
                                                                       size:self.baseSize]);
 }
 
+/*
+ TextView in setText calls setAttributedText. 
+ It was causing bug, where font size was reduced/incremented two times, preventFromChangingAttributedFont is fix for this issue.
+ */
 - (void)setText:(NSString *)text {
     self.preventFromChangingAttributedFont = YES;
     [super setText:text];
