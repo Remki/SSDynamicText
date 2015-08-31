@@ -24,12 +24,7 @@
 
 - (void)setFont:(UIFont *)font {
     [super setFont:font];
-
-    self.fontName = self.font.fontName;
-    self.baseSize = self.font.pointSize;
-    self.defaultFontDescriptor = (self.font.fontDescriptor ?:
-                                  [UIFontDescriptor fontDescriptorWithName:self.fontName
-                                                                      size:self.baseSize]);
+    [self setupBaseFontBasedOnCurrentFont];
 }
 
 /*
@@ -58,7 +53,8 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
+
+    [self setupBaseFontBasedOnCurrentFont];
     [self setup];
 }
 
@@ -89,6 +85,20 @@
 
 - (void)changeAttributedStringFontWithDelta:(NSInteger)newDelta {
     [super setAttributedText:[self.baseAttributedText ss_attributedStringWithAdjustedFontSizeWithDelta:newDelta]];
+}
+
+- (void)setupBaseFontBasedOnCurrentFont {
+    if (self.font) {
+        self.fontName = self.font.fontName;
+        self.baseSize = self.font.pointSize;
+    }
+
+    self.fontName = (self.fontName ?: [self ss_defaultFontName]);
+    self.baseSize = (self.baseSize ?: [self ss_defaultBaseSize]);
+
+    self.defaultFontDescriptor = (self.font.fontDescriptor ?:
+                                  [UIFontDescriptor fontDescriptorWithName:self.fontName
+                                                                      size:self.baseSize]);
 }
 
 - (void)setup {
