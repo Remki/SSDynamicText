@@ -75,7 +75,6 @@
 + (instancetype)buttonWithFontDescriptor:(UIFontDescriptor *)descriptor {
     SSDynamicButton *button = [self new];
     button.defaultFontDescriptor = descriptor;
-
     return button;
 }
 

@@ -56,7 +56,9 @@
 + (instancetype)labelWithFontDescriptor:(UIFontDescriptor *)descriptor {
     SSDynamicLabel *label = [self new];
     label.defaultFontDescriptor = descriptor;
-  
+    label.fontName = descriptor.postscriptName;
+    label.baseSize = descriptor.pointSize;
+
     return label;
 }
 
@@ -94,7 +96,6 @@
     __weak typeof (self) weakSelf = self;
     
     SSTextSizeChangedBlock changeHandler = ^(NSInteger newDelta) {
-
         [weakSelf changeFontWithDelta:newDelta];
         if (weakSelf.baseAttributedText.length > 0) {
             [weakSelf changeAttributedStringFontWithDelta:newDelta];
